@@ -5,7 +5,7 @@ Created on Fri Jun  7 20:45:51 2024
 @author: gm205
 """
 from fastapi import FastAPI
-# from starlette.middleware.cors import CORSMiddleware
+from starlette.middleware.cors import CORSMiddleware
 #from Text import Text
 from modelfile import NERModel
 import uvicorn
@@ -25,9 +25,9 @@ class Text(BaseModel):
 app = FastAPI()
 
 # Allow Cross-Origin Resource Sharing (CORS) requests to from any host so that the JavaScript in the extension can communicate with the server
-# app.add_middleware(
-#     CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"]
-# )
+app.add_middleware(
+    CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"]
+)
 
 # API root
 @app.get("/")
