@@ -5,27 +5,31 @@ Created on Fri Jun  7 21:00:33 2024
 @author: gm205
 """
 
-import torch
+# import torch
 from transformers import DistilBertForTokenClassification, DistilBertTokenizer
 
 class NERModel:
     def __init__(self):
-        if(torch.cuda.is_available()):
-            self.device = torch.device("cuda:0")
-        else:
-            self.device = torch.device("cpu:0")
+        # if(torch.cuda.is_available()):
+        #     self.device = torch.device("cuda:0")
+        # else:
+        #     self.device = torch.device("cpu:0")
 
         # DistilBert Tokenizer & Model for NER
         print("Loading DistilBert Tokenizer & Model for NER.")
         ner_model_name = "Raj-sharma01/results"
         # ner_model_name = "Gkumi/fresh-model-uncased"
         self.tokenizer = DistilBertTokenizer.from_pretrained(ner_model_name)
-        self.model = DistilBertForTokenClassification.from_pretrained(ner_model_name).to(self.device)
+        # self.model = DistilBertForTokenClassification.from_pretrained(ner_model_name).to(self.device)
+        self.model = DistilBertForTokenClassification.from_pretrained(ner_model_name)
 
     def predict_entities(self, text):
-        inputs = self.tokenizer(text, truncation=True, padding=True, return_tensors="pt").to(self.device)
+        # inputs = self.tokenizer(text, truncation=True, padding=True, return_tensors="pt").to(self.device)
+        inputs = self.tokenizer(text, truncation=True, padding=True, return_tensors="pt")
         outputs = self.model(**inputs)
-        predictions = torch.argmax(outputs.logits, dim=2)
+        # predictions = torch.argmax(outputs.logits, dim=2)
+        import numpy as np
+        predictions = outputs.logits.detach().numpy().argmax(axis=2)
         
         # Convert the input_ids back to words
         input_words = [self.tokenizer.decode([id]) for id in inputs["input_ids"].tolist()[0]]
